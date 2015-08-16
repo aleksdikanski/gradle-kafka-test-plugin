@@ -4,6 +4,10 @@
 
 [Gradle] plugin for managing an [Apache Kafka] instance for testing purposes in your build, e.g. before and after running integration tests of microservices with an event-based interface.
 
+It is not intended to start and deploy production ready Kafka clusters. You've been warned.
+
+[![Build Status](https://travis-ci.org/aleksdikanski/gradle-kafka-test-plugin.svg?branch=master)](https://travis-ci.org/aleksdikanski/gradle-kafka-test-plugin)
+
 ## Version
 0.1.0
 
@@ -27,6 +31,14 @@ They can be used to control the lifecycle of the server in other tasks, e.g. :
     // task integrationTest runs the integration tests
     integrationTest.dependsOn startupKafkaServer
     integrationTest.finalizedBy shutdownKafkaServer
+
+The plugin uses the [Apache Curator] library to spin up an instance of a ZooKeeper `TestingServer`,
+which is required for Kafka. Afterwards a `KafkaServerStartable` is used to start a Kafka instance.
+The server objects are published by the `startupKafkaServer` task in the project properties 'zooKeeperServer' and 'kafkaServer'.
+
+The ports are currently assigned statically, this will change in the future.
+  - Zookeeper is listening on port `3181`, also using `54317` and `54318` for quorum messages, etc.
+  - Kafka is listening on port `9192`
 
 ## Task Types
 There are two custom task types to start and shutdown a Kafka instance provided by the plugin
