@@ -25,10 +25,13 @@ dependencies {
 
 jacocoTestReport {
   reports {
+    xml.enabled true
     html.enabled true
     html.destination "${buildDir}/reports/jacoco/test"
   }
 }
+
+check.dependsOn jacocoTestReport
 
 task wrapper(type: Wrapper){
   version = '2.5'
