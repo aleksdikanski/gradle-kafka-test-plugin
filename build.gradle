@@ -1,9 +1,12 @@
 plugins {
   id 'groovy'
   id 'jacoco'
+  id 'com.gradle.plugin-publish' version '0.9.1'
 }
 
 version = '0.1.0'
+group = "com.adikanski.gradle"
+
 description = 'Gradle Kafka Test Plugin'
 
 repositories {
@@ -32,6 +35,20 @@ jacocoTestReport {
 }
 
 check.dependsOn jacocoTestReport
+
+pluginBundle {
+  website = 'https://github.com/aleksdikanski/gradle-kafka-test-plugin'
+  vcsUrl = 'https://github.com/aleksdikanski/gradle-kafka-test-plugin'
+  description = 'Start and stop a Kafka Server for testing purposes.'
+  tags = ['kafka']
+
+  plugins {
+    greetingsPlugin {
+      id = 'de.adikanski.kafka-test'
+      displayName = 'Gradle Kafka Test Plugin'
+    }
+  }
+}
 
 task wrapper(type: Wrapper){
   version = '2.5'
