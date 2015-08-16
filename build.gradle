@@ -43,13 +43,14 @@ pluginBundle {
   tags = ['kafka']
 
   plugins {
-    greetingsPlugin {
+    kafkaTestPlugin {
       id = 'de.adikanski.kafka-test'
       displayName = 'Gradle Kafka Test Plugin'
+      version '0.1.0'
     }
   }
 }
 
-task wrapper(type: Wrapper){
-  version = '2.5'
+task wrapper(type: Wrapper) {
+  gradleVersion = '2.5'
 }
