@@ -24,24 +24,24 @@ To use the plugin, include in your build script:
 The plugin will add two tasks to your build `startupKafkaServer`and `shutdownKafkaServer`.
 They can be used to control the lifecycle of the server in other tasks, e.g. :
 
-  // task integrationTest runs the integration tests
-  integrationTest.dependsOn startupKafkaServer
-  integrationTest.finalizedBy shutdownKafkaServer
+    // task integrationTest runs the integration tests
+    integrationTest.dependsOn startupKafkaServer
+    integrationTest.finalizedBy shutdownKafkaServer
 
 ## Task Types
 There are two custom task types to start and shutdown a Kafka instance provided by the plugin
 
 `KafkaTestStartTask` is used to spin up an instance of Kafka. This will also start a ZooKeeper instance, as it is a required for Kafka.
 
-  task startKafka(type: de.adikanski.gradle.kafkatest.tasks.KafkaTestStartupTask) {
+    task startKafka(type: de.adikanski.gradle.kafkatest.tasks.KafkaTestStartupTask) {
 
-  }
+    }
 
 `KafkaTestShutdownTask` is used to shutdown both the Kafka and the ZooKeeper instance. All resources will be deleted, so that no messages and topics are kept between different restarts of the server instances.
 
-  task startKafka(type: de.adikanski.gradle.kafkatest.tasks.KafkaTestShutdownTask) {
+    task startKafka(type: de.adikanski.gradle.kafkatest.tasks.KafkaTestShutdownTask) {
 
-  }
+    }
 
 
 ## Tech Acknowledgements
