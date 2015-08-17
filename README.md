@@ -11,6 +11,9 @@ It is not intended to start and deploy production ready Kafka clusters. You've b
 ## Version
 0.1.0
 
+**Please note that due to an error, there is an invalid version `2.5` shown in the Gradle Plugin portal.**
+**Use the version specified here or use the dropdown on the Gradle Plugin portal page to select the highest version below `2.5`.**
+
 ## Plugin Usage
 To use the plugin, include in your build script:
 
@@ -41,7 +44,7 @@ The ports are currently assigned statically, this will change in the future.
   - Kafka is listening on port `9192`
 
 ## Task Types
-There are two custom task types to start and shutdown a Kafka instance provided by the plugin
+Theremark are two custom task types to start and shutdown a Kafka instance provided by the plugin
 
 `KafkaTestStartTask` is used to spin up an instance of Kafka. This will also start a ZooKeeper instance, as it is a required for Kafka.
 
