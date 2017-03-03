@@ -1,15 +1,12 @@
 package de.adikanski.gradle.kafkatest.tasks
 
-import kafka.server.KafkaConfig;
+import de.adikanski.gradle.kafkatest.extensions.KafkaTestExtension
+import kafka.server.KafkaConfig
 import kafka.server.KafkaServerStartable
-
 import org.apache.curator.test.InstanceSpec
-import org.apache.curator.test.TestingServer;
-
+import org.apache.curator.test.TestingServer
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
-
-import java.util.Properties;
 
 class KafkaTestStartupTask extends DefaultTask {
 
@@ -21,28 +18,37 @@ class KafkaTestStartupTask extends DefaultTask {
   @TaskAction
   def startupAction() {
 
-    String kafaDataDir = System.getProperty("user.dir") + "/build/tmp/zk-" + new Date().toString().replace(" ", "_");
+    def date = new Date().toString().replace(" ", "_")
+    String kafkaDataDir = "${project.buildDir.path}/tmp/zk-${date}"
+    def kafkaTestExtension = project.extensions.getByType(KafkaTestExtension)
 
-    def zkInstanceSpec = new InstanceSpec(new File(kafaDataDir), 3181, 54317, 54318, true, 1)
+    def zkInstanceSpec = new InstanceSpec(
+        new File(kafkaDataDir),
+        kafkaTestExtension.zooKeeperPort,
+        kafkaTestExtension.electionPort,
+        kafkaTestExtension.quorumPort,
+        true,
+        1
+    )
     // Starts the Zookeeper instance
-    def zooKeeperServer = new TestingServer(zkInstanceSpec, true);
+    def zooKeeperServer = new TestingServer(zkInstanceSpec, true)
 
     project.ext.set "zooKeeperServer", zooKeeperServer
 
     // configure and run Kafka
-     String logFile = System.getProperty("user.dir") + "/build/tmp/kafka-logs-" + new Date().toString().replace(" ", "_");
-     def kafkaProperties = new Properties();
-     kafkaProperties.put("zookeeper.connect", "localhost:3181");
-     kafkaProperties.put("broker.id", "0");
-     kafkaProperties.put("hostname", "localhost");
-     kafkaProperties.put("port", "9192");
-     kafkaProperties.put("log.dirs", logFile);
-     kafkaProperties.put("log.flush.interval.messages", String.valueOf(1));
+    String logFile = "${project.buildDir.path}/tmp/kafka-logs-$date"
+    def kafkaProperties = [
+        'zookeeper.connect'          : "localhost:${kafkaTestExtension.zooKeeperPort}",
+        'broker.id'                  : 0,
+        'host.name'                  : 'localhost',
+        'port'                       : kafkaTestExtension.kafkaPort,
+        'log.dirs'                   : logFile,
+        'log.flush.interval.messages': 1,
+    ].collectEntries { k, v -> [k.toString(), v.toString()] } as Properties
+    def kafkaConfig = new KafkaConfig(kafkaProperties)
+    KafkaServerStartable kafka = new KafkaServerStartable(kafkaConfig)
+    kafka.startup()
 
-     def kafkaConfig = new KafkaConfig(kafkaProperties);
-     KafkaServerStartable kafka = new KafkaServerStartable(kafkaConfig);
-     kafka.startup();
-
-     project.ext.set "kafkaServer", kafka
+    project.ext.set "kafkaServer", kafka
   }
 }

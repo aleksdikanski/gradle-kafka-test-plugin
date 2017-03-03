@@ -39,18 +39,14 @@ check.dependsOn jacocoTestReport
 pluginBundle {
   website = 'https://github.com/aleksdikanski/gradle-kafka-test-plugin'
   vcsUrl = 'https://github.com/aleksdikanski/gradle-kafka-test-plugin'
-  description = """Start and stop a Kafka Server for testing purposes.
-
-  ** Please note that due to an error, there is an invalid version `2.5` shown in the Gradle Plugin portal. **
-  ** Use the version specified on the Github page or use the dropdown on the Gradle Plugin portal page to select the highest version below `2.5`. **
-  """
+  description = 'Start and stop a Kafka Server for testing purposes.'
   tags = ['kafka']
 
   plugins {
     kafkaTestPlugin {
       id = 'de.adikanski.kafka-test'
       displayName = 'Gradle Kafka Test Plugin'
-      version '0.1.0'
+      version project.version
     }
   }
 }
